@@ -1,0 +1,121 @@
+"Phrases"
+{
+  "Welcome"
+  {
+    "#format"   "{1:s}"
+    "en"        "Hey ! Welcome on the server {1}! :^)"
+  }
+  "WelcomeBack"
+  {
+    "#format"   "{1:s}"
+    "en"        "Oh ! Great to see you again {1}! ;-)"
+  }
+  "st"
+  {
+    "en"        "st"
+  }
+  "nd"
+  {
+    "en"        "nd"
+  }
+  "rd"
+  {
+    "en"        "rd"
+  }
+  "th"
+  {
+    "en"        "rd"
+  }
+  "Rank"
+  {
+    "#format"   "{1:i},{2:s},{3:i},{4:s}"
+    "en"        "✘Rank: {1}{2}/{3}{4}"
+  }
+  "Points"
+  {
+    "#format"   "{1:i}"
+    "en"        "✘Points: {1}"
+  }
+  "Kills"
+  {
+    "#format"   "{1:i}"
+    "en"        "✘Kills: {1}"
+  }
+  "Deaths"
+  {
+    "#format"   "{1:i}"
+    "en"        "✘Deaths: {1}"
+  }
+  "Kpd"
+  {
+    "#format"   "{1:.2f}"
+    "en"        "✘Kill per death: {1}"
+  }
+  "Playtime"
+  {
+    "#format"   "{1:s}"
+    "en"        "✘Playtime: {1}"
+  }
+  "ModuloPlaytimeLang"
+  {
+    "#format"   "{1:i},{2:i},{3:i},{4:i}"
+    "en"        "{1} days, {2} hours, {3} mins, {4} secs"
+  }
+  "RankPhrase"
+  {
+    "#format"   "{1:s},{2:s},{3:i},{4:s},{5:i},{6:i}"
+    "en"        "{dbblue}{1} {dborange}{2}{default} is ranked {dbblue}{3}{4}{default} (out of {dbblue}{5} players{default}) with {dbblue}{6} points{default}!"
+  }
+  "KpdPhrase"
+  {
+    "#format"   "{1:s},{2:s},{3:.2f}"
+    "en"        "{dbblue}{1} {dborange}{2}{default} have a Kill Per Death ratio of: {dbblue}{3}{default}!"
+  }
+  "PointsPhrase"
+  {
+    "#format"   "{1:s},{2:s},{3:i}"
+    "en"        "{dbblue}{1} {dborange}{2}{default} have {dbblue}{3} points{default}!"
+  }
+  "ResetTitle"
+  {
+    "en"        "Are you sure? (It will be definitly gone)"
+  }
+  "ResetYes"
+  {
+    "en"        "Yes I'm sure I want to reset my stats!"
+  }
+  "ResetNo"
+  {
+    "en"        "No I'm not sure !"
+  }
+  "ResetPhrase_Yes"
+  {
+    "#format"   "{1:s},{2:s}"
+    "en"        "{dbblue}{1}{default} Your stats have been {dbblue}successfully{default} reseted, {dborange}{2}{default}!"
+  }
+  "ResetPhrase_No"
+  {
+    "#format"   "{1:s},{2:s}"
+    "en"        "{dbblue}{1}{default} Alright, have a {dbblue}good game{default}, {dborange}{2}{default}!"
+  }
+  "VictimDeathPoints"
+  {
+    "#format"   "{1:s},{2:s},{3:i}"
+    "en"        "{dbblue}{1}{default} You died from {dborange}{2}{default} and lost{dbblue} 8 points{default} (You have a total of {dbblue}{3} points{default}!)."
+  }
+  "VictimDeathNoPoints"
+  {
+    "#format"   "{1:s},{2:s},{3:i}"
+    "en"        "{dbblue}{1}{default} You died from {dborange}{2}{default} (You have a total of {dbblue}{3} points{default}!)."
+  }
+  "AttackerKill"
+  {
+    "#format"   "{1:s},{2:s},{3:i}"
+    "en"        "{dbblue}{1}{default} You killed {dborange}{2}{default} and gained{dbblue} 8 points{default} (You have a total of {dbblue}{3} points{default}!)."
+  }
+  "NoFlood"
+  {
+    "#format"   "{1:s},{2:i}"
+    "en"        "{dbblue}{1} {default}Thanks to wait {dbblue}{2} seconds{default} to re-show your stats!"
+  }
+}

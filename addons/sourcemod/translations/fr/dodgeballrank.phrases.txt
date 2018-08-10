@@ -1,0 +1,121 @@
+"Phrases"
+{
+  "Welcome"
+  {
+    "#format"   "{1:s}"
+    "fr"        "Hey ! Bienvenue sur le serveur {1}! :^)"
+  }
+  "WelcomeBack"
+  {
+    "#format"   "{1:s}"
+    "fr"        "Oh ! Heureux de vour revoir {1}! ;-)"
+  }
+  "st"
+  {
+    "fr"        "er"
+  }
+  "nd"
+  {
+    "fr"        "ème"
+  }
+  "rd"
+  {
+    "fr"        "ème"
+  }
+  "th"
+  {
+    "fr"        "ème"
+  }
+  "Rank"
+  {
+    "#format"   "{1:i},{2:s},{3:i},{4:s}"
+    "fr"        "✘Rang: {1}{2}/{3}{4}"
+  }
+  "Points"
+  {
+    "#format"   "{1:i}"
+    "fr"        "✘Points: {1}"
+  }
+  "Kills"
+  {
+    "#format"   "{1:i}"
+    "fr"        "✘Meurtres: {1}"
+  }
+  "Deaths"
+  {
+    "#format"   "{1:i}"
+    "fr"        "✘Morts: {1}"
+  }
+  "Kpd"
+  {
+    "#format"   "{1:.2f}"
+    "fr"        "✘Ratio: {1}"
+  }
+  "Playtime"
+  {
+    "#format"   "{1:s}"
+    "fr"        "✘Temps de jeu: {1}"
+  }
+  "ModuloPlaytimeLang"
+  {
+    "#format"   "{1:i},{2:i},{3:i},{4:i}"
+    "fr"        "{1} jours, {2} heures, {3} mins, {4} secs"
+  }
+  "RankPhrase"
+  {
+    "#format"   "{1:s},{2:s},{3:i},{4:s},{5:i},{6:i}"
+    "fr"        "{dbblue}{1} {dborange}{2}{default} est placé {dbblue}{3}{4}{default} (sur un total de {dbblue}{5} joueurs{default}) avec {dbblue}{6} points{default}!"
+  }
+  "KpdPhrase"
+  {
+    "#format"   "{1:s},{2:s},{3:.2f}"
+    "fr"        "{dbblue}{1} {dborange}{2}{default} a un ratio de: {dbblue}{3}{default}!"
+  }
+  "PointsPhrase"
+  {
+    "#format"   "{1:s},{2:s},{3:i}"
+    "fr"        "{dbblue}{1} {dborange}{2}{default} a {dbblue}{3} points{default}!"
+  }
+  "ResetTitle"
+  {
+    "fr"        "Es-tu sûr? (Tout sera supprimé)"
+  }
+  "ResetYes"
+  {
+    "fr"        "Oui je suis sûr, je veux remettre à zéro mes statistiques!"
+  }
+  "ResetNo"
+  {
+    "fr"        "Non je ne suis pas sûr!"
+  }
+  "ResetPhrase_Yes"
+  {
+    "#format"   "{1:s},{2:s}"
+    "fr"        "{dbblue}{1}{default} Vos statistiques ont été éffacées avec {dbblue}succès{default}, {dborange}{2}{default}!"
+  }
+  "ResetPhrase_No"
+  {
+    "#format"   "{1:s},{2:s}"
+    "fr"        "{dbblue}{1}{default} Ok, dans ce cas, {dbblue}bon jeu{default}, {dborange}{2}{default}!"
+  }
+  "VictimDeathPoints"
+  {
+    "#format"   "{1:s},{2:s},{3:i}"
+    "fr"        "{dbblue}{1}{default} Vous êtes mort par {dborange}{2}{default} et avez perdu{dbblue} 8 points{default} (Vous avez un total de {dbblue}{3} points{default}!)."
+  }
+  "VictimDeathNoPoints"
+  {
+    "#format"   "{1:s},{2:s},{3:i}"
+    "fr"        "{dbblue}{1}{default} Vous êtes mort par {dborange}{2}{default} (Vous avez un total de {dbblue}{3} points{default}!)."
+  }
+  "AttackerKill"
+  {
+    "#format"   "{1:s},{2:s},{3:i}"
+    "fr"        "{dbblue}{1}{default} Vous avez tué {dborange}{2}{default} et gagné{dbblue} 8 points{default} (Vous avez un total de {dbblue}{3} points{default}!)."
+  }
+  "NoFlood"
+  {
+    "#format"   "{1:s},{2:i}"
+    "fr"        "{dbblue}{1}{default} Merci d'attendre {dbblue}{2} secondes{default} pour re-montrer vos statistiques!"
+  }
+}
