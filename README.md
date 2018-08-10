@@ -29,7 +29,7 @@ Also some features will be implemented such as topspeed (see the TODO list).</br
 
 You will just have to copy/drag and drop the folder <code>addons</code> to the <code>tf/</code> server folder.</br>
 </br>
-This plugin uses and creates it's own <em>MySQLite</em> database which is implemented, internal in sourcemod, you can found it in <code>tf/addons/sourcemod/data/sqlite/</code> called <code>db_sqliterank.sq3</code>.</br>
+This plugin uses and creates it's own <em>MySQLite</em> database which is implemented, internal in sourcemod, you can find it in <code>tf/addons/sourcemod/data/sqlite/</code> called <code>db_sqliterank.sq3</code>.</br>
 
 <h2>Languages and colors</h2>
 
