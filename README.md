@@ -15,7 +15,6 @@ This plugin is made for server owners using the <a href="https://forums.alliedmo
 
 Note that it's a plugin under developement, it could have some bugs, feel free to <a href="https://github.com/walgrimfr/TF2-Dodgeball-Rank/issues">create an issue</a> or <a href="https://steamcommunity.com/id/walgrim/">contact me</a>!</br>
 Also some features will be implemented such as topspeed (see the TODO list).</br>
-</br>
 
 <h2>Commands</h2>
 <ul>
