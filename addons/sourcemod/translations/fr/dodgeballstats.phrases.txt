@@ -1,0 +1,141 @@
+"Phrases"
+{
+  "Welcome"
+  {
+    "#format"   "{1:s}"
+    "fr"        "Hey ! Bienvenue sur le serveur {1}! :^)"
+  }
+  "WelcomeBack"
+  {
+    "#format"   "{1:s}"
+    "fr"        "Oh ! Heureux de vour revoir {1}! ;-)"
+  }
+  "st"
+  {
+    "fr"        "er"
+  }
+  "nd"
+  {
+    "fr"        "ème"
+  }
+  "rd"
+  {
+    "fr"        "ème"
+  }
+  "th"
+  {
+    "fr"        "ème"
+  }
+  "Rank"
+  {
+    "#format"   "{1:i},{2:s},{3:i},{4:s}"
+    "fr"        "✘Rang: {1}{2}/{3}{4}"
+  }
+  "Username"
+  {
+    "#format"   "{1:s}"
+    "fr"        "✘Pseudonyme: {1}"
+  }
+  "Points"
+  {
+    "#format"   "{1:i}"
+    "fr"        "✘Points: {1}"
+  }
+  "Kills"
+  {
+    "#format"   "{1:i}"
+    "fr"        "✘Meurtres: {1}"
+  }
+  "Deaths"
+  {
+    "#format"   "{1:i}"
+    "fr"        "✘Morts: {1}"
+  }
+  "Kpd"
+  {
+    "#format"   "{1:.2f}"
+    "fr"        "✘Ratio: {1}"
+  }
+  "Playtime"
+  {
+    "#format"   "{1:s}"
+    "fr"        "✘Temps de jeu: {1}"
+  }
+  "Topspeed"
+  {
+    "#format"   "{1:i}"
+    "fr"        "✘Topspeed: {1} mph"
+  }
+  "Topdeflections"
+  {
+    "#format"   "{1:i}"
+    "fr"        "✘Top déflexions: {1}"
+  }
+  "ModuloPlaytimeLang"
+  {
+    "#format"   "{1:i},{2:i},{3:i},{4:i}"
+    "fr"        "{1} jours, {2} heures, {3} mins, {4} secs"
+  }
+  "RankPhrase"
+  {
+    "#format"   "{1:s},{2:s},{3:i},{4:s},{5:i},{6:i}"
+    "fr"        "{skyblue}{1} {strange}{2}{default} est placé {skyblue}{3}{4}{default} (sur un total de {skyblue}{5} joueurs{default}) avec {skyblue}{6} points{default}!"
+  }
+  "KpdPhrase"
+  {
+    "#format"   "{1:s},{2:s},{3:.2f}"
+    "fr"        "{skyblue}{1} {strange}{2}{default} a un ratio de: {skyblue}{3}{default}!"
+  }
+  "PointsPhrase"
+  {
+    "#format"   "{1:s},{2:s},{3:i}"
+    "fr"        "{skyblue}{1} {strange}{2}{default} a {skyblue}{3} points{default}!"
+  }
+  "TopSpeedPhrase"
+  {
+    "#format"   "{1:s},{2:s},{3:i},{4:i}"
+    "fr"        "{skyblue}{1} {strange}{2}{default} a un Topspeed de: {skyblue}{3} mph (Admin Speed: {4}){default}!"
+  }
+  "ResetTitle"
+  {
+    "fr"        "Es-tu sûr? (Tout sera supprimé)"
+  }
+  "ResetYes"
+  {
+    "fr"        "Oui je suis sûr, je veux remettre à zéro mes statistiques!"
+  }
+  "ResetNo"
+  {
+    "fr"        "Non je ne suis pas sûr!"
+  }
+  "ResetPhrase_Yes"
+  {
+    "#format"   "{1:s},{2:s}"
+    "fr"        "{skyblue}{1}{default} Vos statistiques ont été éffacées avec {skyblue}succès{default}, {strange}{2}{default}!"
+  }
+  "ResetPhrase_No"
+  {
+    "#format"   "{1:s},{2:s}"
+    "fr"        "{skyblue}{1}{default} Ok, dans ce cas, {skyblue}bon jeu{default}, {strange}{2}{default}!"
+  }
+  "VictimDeathPoints"
+  {
+    "#format"   "{1:s},{2:s},{3:i}"
+    "fr"        "{skyblue}{1}{default} Vous êtes mort par {strange}{2}{default} et avez perdu{skyblue} 8 points{default} (Vous avez un total de {skyblue}{3} points{default}!)."
+  }
+  "VictimDeathNoPoints"
+  {
+    "#format"   "{1:s},{2:s},{3:i}"
+    "fr"        "{skyblue}{1}{default} Vous êtes mort par {strange}{2}{default} (Vous avez un total de {skyblue}{3} points{default}!)."
+  }
+  "AttackerKill"
+  {
+    "#format"   "{1:s},{2:s},{3:i}"
+    "fr"        "{skyblue}{1}{default} Vous avez tué {strange}{2}{default} et gagné{skyblue} 8 points{default} (Vous avez un total de {skyblue}{3} points{default}!)."
+  }
+  "NoFlood"
+  {
+    "#format"   "{1:s},{2:i}"
+    "fr"        "{skyblue}{1}{default} Merci d'attendre {skyblue}{2} secondes{default} pour utiliser cette commande!"
+  }
+}
