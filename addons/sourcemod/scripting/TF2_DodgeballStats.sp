@@ -279,46 +279,40 @@ public void SQL_StatsCallback(Handle owner, Handle query, const char[] error, an
 		int i = SQL_FetchInt(query, 0);
 
 		int client = GetClientOfUserId(data);
+
 		float kpd = float(Player[client].kills) / float(Player[client].deaths);
 		int clienttime = Player[client].playtime + GetTime() - Player[client].timeAtConnection;
 		int topspeedMph = RoundFloat(Player[client].actualtopspeed * 0.042614);
 
 		char buffer[255], menutitle[64], name[64];
 		cvar_MenuTitle.GetString(menutitle, sizeof(menutitle));
+		SetGlobalTransTarget(client);
 
 		/* Panel */
 		Handle panel = CreatePanel();
 		SetPanelTitle(panel, menutitle);
 
-		SetGlobalTransTarget(client);
 		Format(buffer, sizeof(buffer), "%t", "Rank", i, RankNumber(client, i), rankcount, RankNumber(client, rankcount));
 		DrawPanelText(panel, buffer);
 
-		SetGlobalTransTarget(client);
 		Format(buffer, sizeof(buffer), "%t", "Points", Player[client].points);
 		DrawPanelText(panel, buffer);
 
-		SetGlobalTransTarget(client);
 		Format(buffer, sizeof(buffer), "%t", "Kills", Player[client].kills);
 		DrawPanelText(panel, buffer);
 
-		SetGlobalTransTarget(client);
 		Format(buffer, sizeof(buffer), "%t", "Deaths", Player[client].deaths);
 		DrawPanelText(panel, buffer);
 
-		SetGlobalTransTarget(client);
 		Format(buffer, sizeof(buffer), "%t", "Kpd", kpd);
 		DrawPanelText(panel, buffer);
 
-		SetGlobalTransTarget(client);
 		Format(buffer, sizeof(buffer), "%t", "Playtime", GetPlayerPlaytime(client, clienttime));
 		DrawPanelText(panel, buffer);
 
-		SetGlobalTransTarget(client);
 		Format(buffer, sizeof(buffer), "%t", "Topspeed", topspeedMph);
 		DrawPanelText(panel, buffer);
 
-		SetGlobalTransTarget(client);
 		Format(buffer, sizeof(buffer), "%t", "Topdeflections", Player[client].actualtopdeflections);
 		DrawPanelText(panel, buffer);
 
@@ -432,33 +426,29 @@ public void SQL_UserCallback(Handle owner, Handle query, const char[] error, any
 	float kpd = float(kills) / float(deaths);
 	topspeed = RoundFloat(topspeed * 0.042614);
 
+	SetGlobalTransTarget(client);
+
 	Menu menu = new Menu(MenuHandlerBack, MenuAction_Cancel|MenuAction_End);
 	menu.SetTitle("%s", name);
 
-	SetGlobalTransTarget(client);
 	Format(buffer, sizeof(buffer), "%t", "Username", name);
 	menu.AddItem("name", buffer);
 	
 	Format(buffer, sizeof(buffer), "SteamID: %s", steamid);
 	menu.AddItem("steamid", buffer);
 	
-	SetGlobalTransTarget(client);
 	Format(buffer, sizeof(buffer), "%t", "Points", points);
 	menu.AddItem("points", buffer);
 	
-	SetGlobalTransTarget(client);
 	Format(buffer, sizeof(buffer), "%t", "Kills", kills);
 	menu.AddItem("kills", buffer);
 	
-	SetGlobalTransTarget(client);
 	Format(buffer, sizeof(buffer), "%t", "Deaths", deaths);
 	menu.AddItem("deaths", buffer);
 	
-	SetGlobalTransTarget(client);
 	Format(buffer, sizeof(buffer), "%t", "Kpd", kpd);
 	menu.AddItem("kpd", buffer);
 	
-	SetGlobalTransTarget(client);
 	Format(buffer, sizeof(buffer), "%t", "Playtime", GetPlayerPlaytime(client, playtime));
 	menu.AddItem("playtime", buffer);
 	
@@ -497,17 +487,15 @@ public Action CMD_ResetStats(int client, int args) {
 		int antiFloodRest = cvar_AntiFloodSeconds.IntValue - TimeRest;
 		if (!IsClientFlooding(client, Player[client].lastTimeUsedCmd)) {
 			char display[255];
+			SetGlobalTransTarget(client);
 			// Create Menu
 			Menu resetmenu = new Menu(MenuResetHandler, MenuAction_Select|MenuAction_Cancel|MenuAction_End);
 			// Title
-			SetGlobalTransTarget(client);
 			resetmenu.SetTitle("%t", "ResetTitle");
 			// Menu choices
-			SetGlobalTransTarget(client);
 			Format(display, sizeof(display), "%t", "ResetYes");
 			resetmenu.AddItem(YES, display);
 
-			SetGlobalTransTarget(client);
 			Format(display, sizeof(display), "%t", "ResetNo");
 			resetmenu.AddItem(NO, display);
 			// SetMenuExitButton
@@ -731,28 +719,26 @@ char RankNumber(int client, int i) {
 	// Modulo
 	int j = i % 10;
 	int k = i % 100;
+
+	SetGlobalTransTarget(client);
 	// Switch with the rest
 	switch (j) {
 		case 1: {
-			if (k != 11) {
-				SetGlobalTransTarget(client);	
+			if (k != 11) {	
 				Format(rankplace, sizeof(rankplace), "%t", "st");
 			}	
 		}
 		case 2: {
 			if (k != 12) {
-				SetGlobalTransTarget(client);	
 				Format(rankplace, sizeof(rankplace), "%t", "nd");	
 			}
 		}
 		case 3: {	
 			if (k != 13) {
-				SetGlobalTransTarget(client);
 				Format(rankplace, sizeof(rankplace), "%t", "rd");	
 			}
 		}
 		default: { 
-			SetGlobalTransTarget(client);
 			Format(rankplace, sizeof(rankplace), "%t", "th"); 
 		}
 	}
