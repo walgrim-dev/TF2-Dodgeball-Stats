@@ -14,7 +14,7 @@ This plugin is made for server owners using the [dodgeball gamemode]("https://fo
 * Topspeed
 * Top deflections
 
-Note that it's a plugin under developement, it could have some bugs, feel free to [create an issue](https://github.com/walgrim-dev/TF2-Dodgeball-Stats/issues") or [contact me]("https://steamcommunity.com/id/walgrim/")!
+Note that it's a plugin under developement, it could have some bugs, feel free to [create an issue](https://github.com/walgrim-dev/TF2-Dodgeball-Stats/issues) or [contact me](https://steamcommunity.com/id/walgrim/)!
 Also some features will be implemented (see TODO list).</br>
 
 ## Commands
