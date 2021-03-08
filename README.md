@@ -2,7 +2,7 @@
 
 ## Presentation
 
-This plugin is made for server owners using the [dodgeball gamemode]("https://forums.alliedmods.net/showthread.php?t=299275") on Team Fortress 2.  
+This plugin is made for server owners using the [dodgeball gamemode](https://forums.alliedmods.net/showthread.php?t=299275) on Team Fortress 2.  
 #### It's a system where players can get the actual stats:
 
 * Rank
@@ -52,7 +52,7 @@ Feel free to help me with the other languages!
 
 ### Changing chat colors
 
-The plugin uses the include [morecolors]("https://forums.alliedmods.net/showthread.php?t=185016") so you can change the colors in the translations files, to do that go in `addons/sourcemod/translations` they are called `dodgeballstats.phrases` (don't miss the other one in the `fr/` folder)!  
+The plugin uses the include [morecolors](https://forums.alliedmods.net/showthread.php?t=185016) so you can change the colors in the translations files, to do that go in `addons/sourcemod/translations` they are called `dodgeballstats.phrases` (don't miss the other one in the `fr/` folder)!  
 
 Then you can replace in the translations (by opening the .txt files) the words in brackets as `{skyblue}` or `{strange}` here are the multiple colors you can use: https://www.doctormckay.com/morecolors.php!
 
