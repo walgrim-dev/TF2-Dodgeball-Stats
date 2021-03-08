@@ -142,7 +142,7 @@ void StartDB() {
 /* Get back the old values for current players */
 void LoadDatas() {
 	for (int client = 1; client <= MaxClients; client++) {
-		if (IsValidClient(client)) {
+		if (IsEntityConnectedClient(client) && !IsFakeClient(client)) {
 			UpdateOrCreatePlayerToDB(client);
 		}
 	}
@@ -150,9 +150,8 @@ void LoadDatas() {
 
 /* Client put in server */
 public void OnClientPutInServer(int client) {
-	if (IsValidClient(client)) {
-		UpdateOrCreatePlayerToDB(client);
-	}
+	if (!IsEntityConnectedClient(client) || IsFakeClient(client)) return;
+	UpdateOrCreatePlayerToDB(client);
 }
 
 /* Update or Create the player row */
@@ -217,10 +216,9 @@ void UpdatePlayerToDB(int client) {
 
 /* Welcome/wb the client if enabled */
 public Action WelcomeOrWb(Handle Timer, int clientid) {
-	char ClientName[64];
 	int client = GetClientOfUserId(clientid);
-	if (!IsValidClient(client))
-		return Plugin_Handled;
+	if (!IsEntityConnectedClient(client) || IsFakeClient(client)) return Plugin_Handled;
+	char ClientName[64];
 	/* Get Client Name */
 	GetClientName(client, ClientName, sizeof(ClientName));
 	/* Synchronize Hud and clear it to avoid overwritting */
@@ -233,31 +231,29 @@ public Action WelcomeOrWb(Handle Timer, int clientid) {
 
 /* Save the playtime of the player on disconnection */
 public void OnClientDisconnect(int client) {
-	if (IsValidClient(client)) {
-		char Query[255];
-		int finaltime = Player[client].playtime + GetTime() - Player[client].timeAtConnection;
-		Format(Query, sizeof(Query), "UPDATE `dbstats` SET playtime = %i WHERE steamid = '%s';", finaltime, GetSteamId(client));
-		SQL_TQuery(db, SQL_ErrorCheckCallBack, Query);
-	}
+	if (!IsEntityConnectedClient(client) || IsFakeClient(client)) return;
+	char Query[255];
+	int finaltime = Player[client].playtime + GetTime() - Player[client].timeAtConnection;
+	Format(Query, sizeof(Query), "UPDATE `dbstats` SET playtime = %i WHERE steamid = '%s';", finaltime, GetSteamId(client));
+	SQL_TQuery(db, SQL_ErrorCheckCallBack, Query);
 }
 
 /* COMMAND RANK */
 public Action CMD_Rank(int client, int args) {
-	if (IsValidClient(client)) {
-		int TimeRest = GetTime() - Player[client].lastTimeUsedCmd;
-		int antiFloodRest = cvar_AntiFloodSeconds.IntValue - TimeRest;
-		// Check if client is flooding
-		if (!IsClientFlooding(client, Player[client].lastTimeUsedCmd)) {
-			char Query[255];
-			//Rank count
-			Format(Query, sizeof(Query), "SELECT COUNT(*) FROM `dbstats`;");
-			SQL_TQuery(db, SQL_RankCount, Query);
-
-			Format(Query, sizeof(Query), "SELECT COUNT(*) FROM (SELECT steamid, points FROM `dbstats` WHERE points >= %i ORDER BY points ASC) as rank;", Player[client].points);
-			SQL_TQuery(db, SQL_StatsCallback, Query, GetClientUserId(client));
-		} else {
-			CPrintToChat(client, "%t", "NoFlood", ServerTag, antiFloodRest);
-		}
+	if (!IsEntityConnectedClient(client)) return Plugin_Handled;
+	// Delay
+	int TimeRest = GetTime() - Player[client].lastTimeUsedCmd;
+	int antiFloodRest = cvar_AntiFloodSeconds.IntValue - TimeRest;
+	// Check if client is flooding
+	if (!IsClientFlooding(client, Player[client].lastTimeUsedCmd)) {
+		char Query[255];
+		//Rank count
+		Format(Query, sizeof(Query), "SELECT COUNT(*) FROM `dbstats`;");
+		SQL_TQuery(db, SQL_RankCount, Query);
+		Format(Query, sizeof(Query), "SELECT COUNT(*) FROM (SELECT steamid, points FROM `dbstats` WHERE points >= %i ORDER BY points ASC) as rank;", Player[client].points);
+		SQL_TQuery(db, SQL_StatsCallback, Query, GetClientUserId(client));
+	} else {
+		CPrintToChat(client, "%t", "NoFlood", ServerTag, antiFloodRest);
 	}
 	return Plugin_Handled;
 }
@@ -322,7 +318,7 @@ public void SQL_StatsCallback(Handle owner, Handle query, const char[] error, an
 
 		GetClientName(client, name, sizeof(name));
 		for (int iClients = 1; iClients <= MaxClients; iClients++) {
-			if (IsValidClient(iClients)) {
+			if (IsEntityConnectedClient(iClients) && !IsFakeClient(iClients)) {
 				CPrintToChat(iClients, "%t", "RankPhrase", ServerTag, name, i, RankNumber(iClients, i), rankcount, Player[client].points);
 			}
 		}
@@ -331,25 +327,24 @@ public void SQL_StatsCallback(Handle owner, Handle query, const char[] error, an
 
 /* COMMAND TOP X */
 public Action CMD_Top(int client, int args) {
-	if (IsValidClient(client)) {
-		int TimeRest = GetTime() - Player[client].lastTimeUsedCmd;
-		int antiFloodRest = cvar_AntiFloodSeconds.IntValue - TimeRest;
-		if (!IsClientFlooding(client, Player[client].lastTimeUsedCmd)) {
-			char Query[255], arg[128];
-			
-			GetCmdArg(1, arg, sizeof(arg));
-			Player[client].topNumber = StringToInt(arg);
-			
-			if (args < 1 || args > 1 || Player[client].topNumber < 1 || Player[client].topNumber > 100) {
-				ReplyToCommand(client, "%s Usage: /top <number> or !top <number>.\nExample: /top 25 (Max 100)", ServerTag);
-				return Plugin_Handled;
-			}
+	if (!IsEntityConnectedClient(client)) return Plugin_Handled;
+	// Delay
+	int TimeRest = GetTime() - Player[client].lastTimeUsedCmd;
+	int antiFloodRest = cvar_AntiFloodSeconds.IntValue - TimeRest;
+	if (!IsClientFlooding(client, Player[client].lastTimeUsedCmd)) {
+		char Query[255], arg[128];
 
-			Format(Query, sizeof(Query), "SELECT steamid, name, points FROM `dbstats` ORDER BY points DESC LIMIT 0, %i;", Player[client].topNumber);
-			SQL_TQuery(db, SQL_TopCallback, Query, GetClientUserId(client));
-		} else {
-			CPrintToChat(client, "%t", "NoFlood", ServerTag, antiFloodRest);
+		GetCmdArg(1, arg, sizeof(arg));
+		Player[client].topNumber = StringToInt(arg);
+
+		if (args < 1 || args > 1 || Player[client].topNumber < 1 || Player[client].topNumber > 100) {
+			ReplyToCommand(client, "%s Usage: /top <number> or !top <number>.\nExample: /top 25 (Max 100)", ServerTag);
+			return Plugin_Handled;
 		}
+		Format(Query, sizeof(Query), "SELECT steamid, name, points FROM `dbstats` ORDER BY points DESC LIMIT 0, %i;", Player[client].topNumber);
+		SQL_TQuery(db, SQL_TopCallback, Query, GetClientUserId(client));
+	} else {
+		CPrintToChat(client, "%t", "NoFlood", ServerTag, antiFloodRest);
 	}
 	return Plugin_Handled;
 }
@@ -358,11 +353,11 @@ public void SQL_TopCallback(Handle owner, Handle query, const char[] error, any 
 	if (query == null) {
 		SetFailState("Query failed! %s", error);
 	} else {
+		int client = GetClientOfUserId(data);
+		if (!IsEntityConnectedClient(client)) return;
+
 		char name[64], steamid[32], toptitle[64], buffer[255];
 		cvar_TopTitle.GetString(toptitle, sizeof(toptitle));
-
-		int client = GetClientOfUserId(data);
-		if (!IsValidClient(client)) return;
 		
 		int i = 0;
 
@@ -407,7 +402,7 @@ public void SQL_UserCallback(Handle owner, Handle query, const char[] error, any
 	}
 
 	int client = GetClientOfUserId(data);
-	if (!IsValidClient(client)) return;
+	if (!IsEntityConnectedClient(client)) return;
 
 	char buffer[255], name[64], steamid[32];
 	int points, kills, deaths, playtime, topspeed, topdeflections;
@@ -482,29 +477,28 @@ public int MenuHandlerBack(Menu menu, MenuAction action, int client, int param2)
 
 /* COMMAND RESETSTATS */
 public Action CMD_ResetStats(int client, int args) {
-	if (IsValidClient(client)) {
-		int TimeRest = GetTime() - Player[client].lastTimeUsedCmd;
-		int antiFloodRest = cvar_AntiFloodSeconds.IntValue - TimeRest;
-		if (!IsClientFlooding(client, Player[client].lastTimeUsedCmd)) {
-			char display[255];
-			SetGlobalTransTarget(client);
-			// Create Menu
-			Menu resetmenu = new Menu(MenuResetHandler, MenuAction_Select|MenuAction_Cancel|MenuAction_End);
-			// Title
-			resetmenu.SetTitle("%t", "ResetTitle");
-			// Menu choices
-			Format(display, sizeof(display), "%t", "ResetYes");
-			resetmenu.AddItem(YES, display);
-
-			Format(display, sizeof(display), "%t", "ResetNo");
-			resetmenu.AddItem(NO, display);
-			// SetMenuExitButton
-			resetmenu.ExitButton = true;
-			// DisplayMenu to the client
-			resetmenu.Display(client, 20);
-		} else {
-			CPrintToChat(client, "%t", "NoFlood", ServerTag, antiFloodRest);
-		}
+	if (!IsEntityConnectedClient(client)) return Plugin_Handled;
+	// Delay
+	int TimeRest = GetTime() - Player[client].lastTimeUsedCmd;
+	int antiFloodRest = cvar_AntiFloodSeconds.IntValue - TimeRest;
+	if (!IsClientFlooding(client, Player[client].lastTimeUsedCmd)) {
+		char display[255];
+		SetGlobalTransTarget(client);
+		// Create Menu
+		Menu resetmenu = new Menu(MenuResetHandler, MenuAction_Select|MenuAction_Cancel|MenuAction_End);
+		// Title
+		resetmenu.SetTitle("%t", "ResetTitle");
+		// Menu choices
+		Format(display, sizeof(display), "%t", "ResetYes");
+		resetmenu.AddItem(YES, display);
+		Format(display, sizeof(display), "%t", "ResetNo");
+		resetmenu.AddItem(NO, display);
+		// SetMenuExitButton
+		resetmenu.ExitButton = true;
+		// DisplayMenu to the client
+		resetmenu.Display(client, 20);
+	} else {
+		CPrintToChat(client, "%t", "NoFlood", ServerTag, antiFloodRest);
 	}
 	return Plugin_Handled;
 }
@@ -539,53 +533,50 @@ public int MenuResetHandler(Menu menu, MenuAction action, int client, int item) 
 
 /* CMD KPD */
 public Action CMD_Kpd(int client, int args) {
-	if (IsValidClient(client)) {
-		int TimeRest = GetTime() - Player[client].lastTimeUsedCmd;
-		int antiFloodRest = cvar_AntiFloodSeconds.IntValue - TimeRest;
-
-		if (!IsClientFlooding(client, Player[client].lastTimeUsedCmd)) {
-			char name[64];
-			GetClientName(client, name, sizeof(name));
-			float kpd = float(Player[client].kills) / float(Player[client].deaths);
-			CPrintToChatAll("%t", "KpdPhrase", ServerTag, name, kpd);
-		} else {
-			CPrintToChat(client, "%t", "NoFlood", ServerTag, antiFloodRest);
-		}
+	if (!IsEntityConnectedClient(client)) return Plugin_Handled;
+	// Delay
+	int TimeRest = GetTime() - Player[client].lastTimeUsedCmd;
+	int antiFloodRest = cvar_AntiFloodSeconds.IntValue - TimeRest;
+	if (!IsClientFlooding(client, Player[client].lastTimeUsedCmd)) {
+		char name[64];
+		GetClientName(client, name, sizeof(name));
+		float kpd = float(Player[client].kills) / float(Player[client].deaths);
+		CPrintToChatAll("%t", "KpdPhrase", ServerTag, name, kpd);
+	} else {
+		CPrintToChat(client, "%t", "NoFlood", ServerTag, antiFloodRest);
 	}
 	return Plugin_Handled;
 }
 
 /* CMD POINTS */
 public Action CMD_Points(int client, int args) {
-	if (IsValidClient(client)) {
-		int TimeRest = GetTime() - Player[client].lastTimeUsedCmd;
-		int antiFloodRest = cvar_AntiFloodSeconds.IntValue - TimeRest;
-
-		if (!IsClientFlooding(client, Player[client].lastTimeUsedCmd)) {
-			char name[64];
-			GetClientName(client, name, sizeof(name));
-			CPrintToChatAll("%t", "PointsPhrase", ServerTag, name, Player[client].points);
-		} else {
-			CPrintToChat(client, "%t", "NoFlood", ServerTag, antiFloodRest);
-		}
+	if (!IsEntityConnectedClient(client)) return Plugin_Handled;
+	// Delay
+	int TimeRest = GetTime() - Player[client].lastTimeUsedCmd;
+	int antiFloodRest = cvar_AntiFloodSeconds.IntValue - TimeRest;
+	if (!IsClientFlooding(client, Player[client].lastTimeUsedCmd)) {
+		char name[64];
+		GetClientName(client, name, sizeof(name));
+		CPrintToChatAll("%t", "PointsPhrase", ServerTag, name, Player[client].points);
+	} else {
+		CPrintToChat(client, "%t", "NoFlood", ServerTag, antiFloodRest);
 	}
 	return Plugin_Handled;
 }
 
 /* CMD TOPSPEED */
 public Action CMD_TopSpeed(int client, int args) {
-	if (IsValidClient(client)) {
-		int TimeRest = GetTime() - Player[client].lastTimeUsedCmd;
-		int antiFloodRest = cvar_AntiFloodSeconds.IntValue - TimeRest;
-		int topspeedMph = RoundFloat(Player[client].actualtopspeed * 0.042614);
-
-		if (!IsClientFlooding(client, Player[client].lastTimeUsedCmd)) {
-			char name[64];
-			GetClientName(client, name, sizeof(name));
-			CPrintToChatAll("%t", "TopSpeedPhrase", ServerTag, name, topspeedMph, Player[client].actualtopspeed);
-		} else {
-			CPrintToChat(client, "%t", "NoFlood", ServerTag, antiFloodRest);
-		}
+	if (!IsEntityConnectedClient(client)) return Plugin_Handled;
+	// Delay
+	int TimeRest = GetTime() - Player[client].lastTimeUsedCmd;
+	int antiFloodRest = cvar_AntiFloodSeconds.IntValue - TimeRest;
+	int topspeedMph = RoundFloat(Player[client].actualtopspeed * 0.042614);
+	if (!IsClientFlooding(client, Player[client].lastTimeUsedCmd)) {
+		char name[64];
+		GetClientName(client, name, sizeof(name));
+		CPrintToChatAll("%t", "TopSpeedPhrase", ServerTag, name, topspeedMph, Player[client].actualtopspeed);
+	} else {
+		CPrintToChat(client, "%t", "NoFlood", ServerTag, antiFloodRest);
 	}
 	return Plugin_Handled;
 }
@@ -607,7 +598,7 @@ public Action GetDodgeballStats(int client, int args) {
 		GetCmdArg(3, arg3, sizeof(arg3)); owner = StringToInt(arg3, 10); // owner
 		GetCmdArg(4, arg4, sizeof(arg4)); target = StringToInt(arg4, 10); // target
 		
-		if (IsValidClient(owner) && IsValidClient(target)) {
+		if (IsEntityConnectedClient(owner) && IsEntityConnectedClient(target) && !IsFakeClient(owner) && !IsFakeClient(target)) {
 			Player[owner].realTimetopspeed = newspeed; 
 			Player[owner].realTimetopdeflections = deflections;
 			Player[target].realTimetopspeed = oldspeed; 
@@ -643,7 +634,7 @@ public Action OnPlayerDeath(Event event, const char[] name, bool dontBroadcast) 
 	GetClientName(attacker, AttackerName, sizeof(AttackerName));
 	GetClientName(victim, VictimName, sizeof(VictimName));
 
-	if (IsValidClient(attacker) && IsValidClient(victim) && victim != attacker) {
+	if (IsEntityConnectedClient(attacker) && IsEntityConnectedClient(victim) && !IsFakeClient(attacker) && !IsFakeClient(victim) && victim != attacker) {
 		Player[attacker].points += cvar_OnKillPoints.IntValue; Player[attacker].kills++; Player[victim].deaths++;
 		// Update stats of the victim if his points are > 1000
 		if (Player[victim].points > 1000) {
@@ -699,7 +690,7 @@ void GetDriver(Handle database) {
 
 char GetEscapedName(int client) {
 	char name[64], EscapedName[64*2+1];
-	if (IsValidClient(client)) {
+	if (IsEntityConnectedClient(client)) {
 		GetClientName(client, name, sizeof(name));
 		SQL_EscapeString(db, name, EscapedName, sizeof(EscapedName));
 	}
@@ -708,7 +699,7 @@ char GetEscapedName(int client) {
 
 char GetSteamId(int client) {
 	char SteamID[32];
-	if (IsValidClient(client)) {
+	if (IsEntityConnectedClient(client)) {
 		GetClientAuthId(client, AuthId_Steam2, SteamID, sizeof(SteamID), true);
 	}
 	return SteamID;
@@ -776,6 +767,6 @@ bool IsClientFlooding(int client, int lasttimeused) {
 	return false;
 }
 
-bool IsValidClient(int client) {
-	return (client > 0 && client <= MaxClients && IsClientInGame(client) && !IsFakeClient(client));
+stock bool IsEntityConnectedClient(int entity) {
+    return 0 < entity <= MaxClients && IsClientInGame(entity);
 }
