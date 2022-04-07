@@ -1,4 +1,5 @@
 # TF2-Dodgeball-Stats
+# **REQUIRES [SOURCEMOD 1.10](https://www.sourcemod.net/downloads.php?branch=stable) OR NEWER VERSION TO WORK CORRECTLY**
 
 ## Presentation
 
