@@ -41,7 +41,7 @@ enum struct DodgeballPlayer {
 	/* SETTINGS */
 	int timeAtConnection;
 	int lastTimeUsedCmd;
-	bool isNew;	
+	bool isNew;
 }
 
 DodgeballPlayer Player[MAXPLAYERS + 1];
@@ -79,7 +79,7 @@ public void OnPluginStart() {
 	RegConsoleCmd("sm_topspeed", CMD_TopSpeed, "Command to show topspeed.");
 	RegConsoleCmd("sm_resetstats", CMD_ResetStats, "Command to reset the stats.");
 
-	/* Reg admin commands */ 
+	/* Reg admin commands */
 	RegAdminCmd("sm_dodgeballstats", GetDodgeballStats, ADMFLAG_ROOT, "Retrieve speed, deflections from general.cfg", _, FCVAR_PROTECTED);
 
 	/* Hook players deaths */
@@ -119,7 +119,7 @@ void StartDB() {
 		SetFailState(error);
 
 	//Get the strings in utf8
-	SQL_SetCharset(db, "utf8");
+	SQL_SetCharset(db, "utf8mb4");
 	if (IsSQLite) {
 		// The NOT NULL constraint enforces a column to NOT accept NULL values.
 		Format(Query, sizeof(Query), "CREATE TABLE IF NOT EXISTS `dbstats` (name TEXT NOT NULL, steamid TEXT UNIQUE NOT NULL, points INTEGER NOT NULL, kills INTEGER NOT NULL, deaths INTEGER NOT NULL, playtime INTEGER NOT NULL, topspeed INTEGER NOT NULL, topdeflections INTEGER NOT NULL);");
@@ -358,7 +358,7 @@ public void SQL_TopCallback(Handle owner, Handle query, const char[] error, any 
 
 		char name[64], steamid[32], toptitle[64], buffer[255];
 		cvar_TopTitle.GetString(toptitle, sizeof(toptitle));
-		
+
 		int i = 0;
 
 		// Create Menu
@@ -428,28 +428,28 @@ public void SQL_UserCallback(Handle owner, Handle query, const char[] error, any
 
 	Format(buffer, sizeof(buffer), "%t", "Username", name);
 	menu.AddItem("name", buffer);
-	
+
 	Format(buffer, sizeof(buffer), "SteamID: %s", steamid);
 	menu.AddItem("steamid", buffer);
-	
+
 	Format(buffer, sizeof(buffer), "%t", "Points", points);
 	menu.AddItem("points", buffer);
-	
+
 	Format(buffer, sizeof(buffer), "%t", "Kills", kills);
 	menu.AddItem("kills", buffer);
-	
+
 	Format(buffer, sizeof(buffer), "%t", "Deaths", deaths);
 	menu.AddItem("deaths", buffer);
-	
+
 	Format(buffer, sizeof(buffer), "%t", "Kpd", kpd);
 	menu.AddItem("kpd", buffer);
-	
+
 	Format(buffer, sizeof(buffer), "%t", "Playtime", GetPlayerPlaytime(client, playtime));
 	menu.AddItem("playtime", buffer);
-	
+
 	Format(buffer, sizeof(buffer), "%t", "Topspeed", topspeed);
 	menu.AddItem("topspeed", buffer);
-	
+
 	Format(buffer, sizeof(buffer), "%t", "Topdeflections", topdeflections);
 	menu.AddItem("topdeflections", buffer);
 
@@ -587,23 +587,23 @@ public Action GetDodgeballStats(int client, int args) {
 		char arg1[128], arg2[128], arg3[128], arg4[128];
 		int deflections, owner, target;
 		// Get stats
-		/* Note: 
+		/* Note:
 		This works only if the event "on deflect" is choosen in general.cfg.
-		Anyway all player stats are mostly updated on death so it will not 
+		Anyway all player stats are mostly updated on death so it will not
 		update at each deflection. */
 		oldspeed = newspeed;
-		
+
 		GetCmdArg(1, arg1, sizeof(arg1)); newspeed = StringToInt(arg1, 10); // newspeed
 		GetCmdArg(2, arg2, sizeof(arg2)); deflections = StringToInt(arg2, 10); // deflections
 		GetCmdArg(3, arg3, sizeof(arg3)); owner = StringToInt(arg3, 10); // owner
 		GetCmdArg(4, arg4, sizeof(arg4)); target = StringToInt(arg4, 10); // target
-		
+
 		if (IsEntityConnectedClient(owner) && IsEntityConnectedClient(target) && !IsFakeClient(owner) && !IsFakeClient(target)) {
-			Player[owner].realTimetopspeed = newspeed; 
+			Player[owner].realTimetopspeed = newspeed;
 			Player[owner].realTimetopdeflections = deflections;
-			Player[target].realTimetopspeed = oldspeed; 
+			Player[target].realTimetopspeed = oldspeed;
 			Player[target].realTimetopdeflections = (deflections > 0) ? deflections - 1 : deflections;
-			
+
 			// Update Owner
 			if (Player[owner].realTimetopspeed > Player[owner].actualtopspeed) {
 				Player[owner].actualtopspeed = Player[owner].realTimetopspeed;
@@ -616,7 +616,7 @@ public Action GetDodgeballStats(int client, int args) {
 				Player[target].actualtopspeed = Player[target].realTimetopspeed;
 			}
 			if (Player[target].realTimetopdeflections > Player[target].actualtopdeflections) {
-				Player[target].actualtopdeflections = Player[target].realTimetopdeflections; 
+				Player[target].actualtopdeflections = Player[target].realTimetopdeflections;
 			}
 		}
 	}
@@ -626,7 +626,7 @@ public Action GetDodgeballStats(int client, int args) {
 /* On client kill or death add points and +1 at death or kills */
 public Action OnPlayerDeath(Event event, const char[] name, bool dontBroadcast) {
 	char AttackerName[32], VictimName[32];
-	newspeed = 0; 
+	newspeed = 0;
 	oldspeed = 0;
 	int victim = GetClientOfUserId(GetEventInt(event, "userid"));
 	int attacker = GetClientOfUserId(GetEventInt(event, "attacker"));
@@ -653,7 +653,7 @@ public Action OnPlayerDeath(Event event, const char[] name, bool dontBroadcast) 
 /* Update player stats */
 void SQLUpdateStats(int client) {
 	char Query[255];
-	Format(Query, sizeof(Query), "UPDATE `dbstats` SET points = %i, kills = %i, deaths = %i, topspeed = %i, topdeflections = %i WHERE steamid = '%s'", 
+	Format(Query, sizeof(Query), "UPDATE `dbstats` SET points = %i, kills = %i, deaths = %i, topspeed = %i, topdeflections = %i WHERE steamid = '%s'",
 	Player[client].points, Player[client].kills, Player[client].deaths, Player[client].actualtopspeed, Player[client].actualtopdeflections, GetSteamId(client));
 	SQL_TQuery(db, SQL_ErrorCheckCallBack, Query);
 }
@@ -715,22 +715,22 @@ char RankNumber(int client, int i) {
 	// Switch with the rest
 	switch (j) {
 		case 1: {
-			if (k != 11) {	
+			if (k != 11) {
 				Format(rankplace, sizeof(rankplace), "%t", "st");
-			}	
+			}
 		}
 		case 2: {
 			if (k != 12) {
-				Format(rankplace, sizeof(rankplace), "%t", "nd");	
+				Format(rankplace, sizeof(rankplace), "%t", "nd");
 			}
 		}
-		case 3: {	
+		case 3: {
 			if (k != 13) {
-				Format(rankplace, sizeof(rankplace), "%t", "rd");	
+				Format(rankplace, sizeof(rankplace), "%t", "rd");
 			}
 		}
-		default: { 
-			Format(rankplace, sizeof(rankplace), "%t", "th"); 
+		default: {
+			Format(rankplace, sizeof(rankplace), "%t", "th");
 		}
 	}
 	return rankplace;
@@ -768,5 +768,5 @@ bool IsClientFlooding(int client, int lasttimeused) {
 }
 
 stock bool IsEntityConnectedClient(int entity) {
-    return 0 < entity <= MaxClients && IsClientInGame(entity);
+	return 0 < entity <= MaxClients && IsClientInGame(entity);
 }
